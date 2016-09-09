@@ -1,10 +1,17 @@
-require "#{Dir.pwd}/config.rb"
+$my_dir=File.expand_path(File.dirname(__FILE__))
+require "#{$my_dir}/config.rb"
+require 'etc'
+require 'geoip'
+require 'json'
+require 'logger'
+require 'mysql2'
 require 'rubygems'
-require 'mysql2'
-require 'ipaddr'
-require 'mysql2'
+require 'ruby-prof'
+require 'whois'
+$err_logger=Logger.new("#{$my_dir}/var/log/update_db.cron.log")
+$err_logger.level=Logger::ERROR
 
-$p2p_db_client=Mysql2::Client.new(:host => $p2p_db_host, :database => $p2p_db, :username => $p2p_db_user, :password => $p2p_db_pass)
+$whois_db_client=Mysql2::Client.new(:host => $whois_db_host, :database => $whois_db, :username => $whois_db_user, :password => $whois_db_pass)
 $inetnums=[]
 
 def get_db(url,rr_name,db_filename)
@@ -75,15 +82,15 @@ exit
 
 $inetnums.each do |inetnum|
 	begin
-		req="insert ignore into #{$p2p_db_inetnums_table} values (inet_aton(\"#{inetnum["network"]}\"),inet_aton(\"#{inetnum["netmask"]}\"),#{inetnum["asn"]});"
-		res=$p2p_db_client.query(req)
+		req="insert ignore into #{$whois_db_inetnums_table} values (inet_aton(\"#{inetnum["network"]}\"),inet_aton(\"#{inetnum["netmask"]}\"),#{inetnum["asn"]});"
+		res=$whois_db_client.query(req)
 	rescue => e
 		puts e.to_s
 		puts req
 	end
 end
 
-req="insert replace into #{$p2p_db_inetnums_table} select * from #{$p2p_db_fast_inetnums_table};"
-res=$p2p_db_client.query(req)
+req="insert replace into #{$whois_db_inetnums_table} select * from #{$whois_db_fast_inetnums_table};"
+res=$whois_db_client.query(req)
 
 

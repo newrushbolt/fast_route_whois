@@ -11,6 +11,11 @@ log\*
 #Some soft backups
 *.bak
 
+#New logs, lock, etc
+var/*
+var\*
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
