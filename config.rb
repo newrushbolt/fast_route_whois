@@ -1,3 +1,11 @@
+require 'json'
+require 'logger'
+require 'rubygems'
+
+$app_dir='/home/mihailov.s/fast_route_whois'
+$log_dir='var/log'
+$log_level=Logger::WARN
+
 $whois_db='fast_whois'
 $whois_db_host='localhost'
 $whois_db_user='fast_whois'

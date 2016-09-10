@@ -1,10 +1,5 @@
-
-$my_dir=File.expand_path(File.dirname(__FILE__))
-require "#{$my_dir}/config.rb"
-
-$err_logger=Logger.new("#{$my_dir}/var/log/functions.lib.log")
-$err_logger.level=Logger::DEBUG
-
+$lib_dir=File.expand_path(File.dirname(__FILE__))
+require "#{$lib_dir}/config.rb"
 
 $whois_db_client = Mysql2::Client.new(:host => $whois_db_host, :database => $whois_db, :username => $whois_db_user, :password => $whois_db_pass)
 
@@ -34,7 +29,7 @@ end
 def get_asn_geo(aton)
 	$err_logger.debug "Got no ASN for #{aton}, trying geoip base"
 	begin
-		geo_info=GeoIP.new("#{$my_dir}/GeoIPASNum.dat").asn(aton)
+		geo_info=GeoIP.new("#{$lib_dir}/GeoIPASNum.dat").asn(aton)
 		asn=geo_info[:number].gsub(/^*(AS|as|As|aS)/, "").to_i
 	rescue  => e
 		$err_logger.error "Error in GeoIPASNum request for #{aton}"
