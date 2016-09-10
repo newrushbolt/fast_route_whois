@@ -1,14 +1,7 @@
 
 $my_dir=File.expand_path(File.dirname(__FILE__))
 require "#{$my_dir}/config.rb"
-require 'etc'
-require 'geoip'
-require 'json'
-require 'logger'
-require 'mysql2'
-require 'rubygems'
-require 'ruby-prof'
-require 'whois'
+
 $err_logger=Logger.new("#{$my_dir}/var/log/functions.lib.log")
 $err_logger.level=Logger::DEBUG
 

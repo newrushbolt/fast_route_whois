@@ -1,3 +1,11 @@
+require 'etc'
+require 'geoip'
+require 'json'
+require 'logger'
+require 'mysql2'
+require 'rubygems'
+require 'ruby-prof'
+require 'whois'
 require "#{Dir.pwd}/functions.lib.rb"
 
 if ARGV[0]

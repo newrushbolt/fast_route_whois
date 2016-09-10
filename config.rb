@@ -1,6 +1,6 @@
-$whois_db='p2p'
+$whois_db='fast_whois'
 $whois_db_host='localhost'
-$whois_db_user='p2p'
+$whois_db_user='fast_whois'
 $whois_db_pass='wb5nv6d8'
 $whois_db_inetnums_table='inetnums'
 $whois_db_fast_inetnums_table='fast_inetnums'
