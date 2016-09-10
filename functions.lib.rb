@@ -47,7 +47,7 @@ def get_asn_geo(aton)
 end
 
 def get_whois_info(aton)
-	$err_logger.debug "Started <get_whois_info> for #{aton}"
+    $err_logger.debug "Started <get_whois_info> for #{aton}"
     info_result = {}
     begin
 		whois_client = Whois::Client.new
@@ -117,10 +117,9 @@ def get_whois_info(aton)
 end
 
 def get_fast_whois_info(aton)
-	$err_logger.debug "Started <get_fast_whois_info> for #{aton}"
+    $err_logger.debug "Started <get_fast_whois_info> for #{aton}"
     info_result = {}
-    
-	req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_inetnums_table}
+    req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_inetnums_table}
 where (inet_aton(\"#{aton}\") & netmask) = network;"
 	res=$whois_db_client.query(req)
 	if res.any?
@@ -146,10 +145,10 @@ def update_to_fast(inetnum)
 		req="insert ignore into #{$whois_db_inetnums_table} values (inet_aton(\"#{inetnum["network"]}\"),inet_aton(\"#{inetnum["netmask"]}\"),#{inetnum["asn"]});"
 		res=$whois_db_client.query(req)
 	rescue  => e
-			$err_logger.error "Error while updating fast_whois info for #{aton}"
-			$err_logger.error req.to_s
-			$err_logger.error e.to_s
-			return nil
+		$err_logger.error "Error while updating fast_whois info for #{inetnum.to_s}"
+		$err_logger.error req.to_s
+		$err_logger.error e.to_s
+		return nil
 	end
 end
 
