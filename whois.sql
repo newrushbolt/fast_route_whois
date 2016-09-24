@@ -21,10 +21,20 @@ CREATE TABLE `inetnums` (
   KEY `full` (`network`,`netmask`,`asn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-SET SQL_MODE = '';
-GRANT USAGE ON *.* TO fast_whois;
- DROP USER fast_whois;
-SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+DROP USER IF EXISTS fast_whois;
 CREATE USER 'fast_whois' IDENTIFIED BY 'wb5nv6d8';
-
 GRANT ALL ON `fast_whois`.* TO 'fast_whois';
+GRANT USAGE ON `fast_whois`.* TO fast_whois;
+
+DELIMITER ;;
+CREATE DEFINER=`fast_whois`@`localhost` TRIGGER `fast_whois`.`inetnums_AFTER_INSERT` AFTER INSERT ON `inetnums` FOR EACH ROW
+BEGIN
+    insert ignore into `fast_whois`.`fast_inetnums` values (NEW.network,NEW.netmask,NEW.asn);
+END;;
+CREATE DEFINER=`fast_whois`@`localhost` TRIGGER `fast_whois`.`inetnums_BEFORE_DELETE` BEFORE DELETE ON `inetnums` FOR EACH ROW
+BEGIN
+        delete from `fast_whois`.`fast_inetnums` where network = OLD.network and netmask = OLD.netmask;
+END;;
+DELIMITER ;
+
+

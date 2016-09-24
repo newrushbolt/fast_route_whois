@@ -1,4 +1,5 @@
 $lib_dir=File.expand_path(File.dirname(__FILE__))
+#$err_logger.info "Loading config from #{$lib_dir}/config.rb"
 require "#{$lib_dir}/config.rb"
 
 $whois_db_client = Mysql2::Client.new(:host => $whois_db_host, :database => $whois_db, :username => $whois_db_user, :password => $whois_db_pass)
@@ -114,7 +115,7 @@ end
 def get_fast_whois_info(aton)
     $err_logger.debug "Started <get_fast_whois_info> for #{aton}"
     info_result = {}
-    req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_inetnums_table}
+    req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_fast_inetnums_table}
 where (inet_aton(\"#{aton}\") & netmask) = network;"
 	res=$whois_db_client.query(req)
 	if res.any?
@@ -156,6 +157,8 @@ def get_info(aton)
 					return nil
 				end
 			end
+	#"insert into fast_inetnums (select * from inetnums);"
+	#Initialize fast_inetnums if it's empty
 #			res=get_whois_info(aton)
 			res=get_fast_whois_info(aton)
 			if !res

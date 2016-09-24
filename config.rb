@@ -1,6 +1,9 @@
-require 'json'
-require 'logger'
+require 'etc'
+require 'geoip'
+require 'mysql2'
 require 'rubygems'
+require 'whois'
+require 'json'
 
 $app_dir='/home/mihailov.s/fast_route_whois'
 $log_dir='var/log'
@@ -10,7 +13,7 @@ $whois_db='fast_whois'
 $whois_db_host='localhost'
 $whois_db_user='fast_whois'
 $whois_db_pass='wb5nv6d8'
-$whois_db_inetnums_table='fast_inetnums'
+$whois_db_inetnums_table='inetnums'
 $whois_db_fast_inetnums_table='fast_inetnums'
 
 $rr_urls=['ftp://ftp.ripe.net/ripe/dbase/split/ripe.db.route.gz',

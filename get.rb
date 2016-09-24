@@ -1,24 +1,23 @@
-require 'etc'
-require 'geoip'
-require 'mysql2'
-#require 'ruby-prof'
-require 'whois'
+require 'logger'
 
 $get_dir=File.expand_path(File.dirname(__FILE__))
+$err_logger=Logger.new("#{$get_dir}/var/log/get.log")
+$err_logger.level=Logger::DEBUG
+
 require "#{$get_dir}/functions.lib.rb"
-$err_logger=Logger.new("#{$get_dir}/#{$log_dir}/get.log")
-$err_logger.level=$log_level
+
+
 if ARGV[1]
     case ARGV[1]
-    when debug
+    when 'debug'
 	$err_logger.level=Logger::DEBUG
-    when info
+    when 'info'
 	$err_logger.level=Logger::IFNO
-    when warn
+    when 'warn'
 	$err_logger.level=Logger::WARN
-    when error
+    when 'error'
 	$err_logger.level=Logger::ERROR
-    when fatal
+    when 'fatal'
 	$err_logger.level=Logger::FATAL
     end
 end
