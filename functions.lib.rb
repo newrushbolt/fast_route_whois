@@ -10,6 +10,36 @@ $private_nets.each do |net|
 	$err_logger.debug "Loading private IP-net #{net}"
 end
 
+def check_fast_table
+	$err_logger.debug "Checking fast table content"
+	begin
+		req="select (select count(*) as fcnt from #{$whois_db_fast_inetnums_table}) = (select count(*) as cnt from #{$whois_db_inetnums_table}) as fast_table_ok;"
+		$err_logger.debug req
+		res=$whois_db_client.query(req)
+	rescue => e
+		$err_logger.error "Error comparing inetnums tables"
+		$err_logger.error req
+		$err_logger.error e.to_s
+		return false
+	end
+	if res.first["fast_table_ok"] == 1
+		$err_logger.debug "Fast_inetnums(MEMORY) got same route count as inetnums(INNODB)"
+		return true
+	else
+		$err_logger.warn "Fast_inetnums(MEMORY) havent got enought routes, updating from inetnums(INNODB)"
+		begin
+			req="insert ignore into #{$whois_db_fast_inetnums_table} (select * from #{$whois_db_inetnums_table});"
+			res=$whois_db_client.query(req)
+		rescue => e
+			$err_logger.error "Error while updating fast_inetnums table"
+			$err_logger.error req
+			$err_logger.error e.to_s
+			return false
+		end
+		return true
+	end
+end
+
 def get_lacnic_route(inetnum)
 	$err_logger.debug inetnum
 	ip_all=inetnum.match(/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){0,2}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/[0-9]{1,2}/)[0]
@@ -105,8 +135,8 @@ def get_whois_info(aton)
 		$err_logger.debug "Got full info for #{aton} :"
 		$err_logger.debug info_result.to_s
 	else
-		$err_logger.debug "Cannot get info for #{aton} :"
-		$err_logger.debug info_result.to_s
+		$err_logger.error "Cannot get info for #{aton} :"
+		$err_logger.error info_result.to_s
 		info_result=nil
 	end
 	return info_result
@@ -117,7 +147,10 @@ def get_fast_whois_info(aton)
     info_result = {}
     req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_fast_inetnums_table}
 where (inet_aton(\"#{aton}\") & netmask) = network;"
+	$err_logger.debug req
 	res=$whois_db_client.query(req)
+	$err_logger.debug "Got SQl results:"
+	$err_logger.debug res.each
 	if res.any?
 		result=res.first
 		info_result["network"]=result["network"]
@@ -129,8 +162,8 @@ where (inet_aton(\"#{aton}\") & netmask) = network;"
 		$err_logger.debug "Got full info for #{aton} :"
 		$err_logger.debug info_result.to_s
 	else
-		$err_logger.debug "Cannot get info for #{aton} :"
-		$err_logger.debug info_result.to_s
+		$err_logger.warn "Cannot get info for #{aton} :"
+		$err_logger.warn info_result.to_s
 		info_result=nil
 	end
 	return info_result
@@ -153,7 +186,7 @@ def get_info(aton)
 			IPAddr.new(aton)
 			$private_ip_nets.each do |net|
 				if net.include?(aton)
-					$err_logger.error "IP #{aton} is in private net #{net.inspect}, exiting"
+					$err_logger.warn "IP #{aton} is in private net #{net.inspect}, exiting"
 					return nil
 				end
 			end
@@ -164,7 +197,11 @@ def get_info(aton)
 			if !res
 				$err_logger.warn "Cannot get fast_whois for #{aton}, starting whois"
 				res=get_whois_info(aton)
-				update_to_fast(res)
+				if res.nil?
+					raise 'Slow whois error'
+				else
+					update_to_fast(res)
+				end
 			end
 	rescue  => e_main
 			$err_logger.error "Error while geting whois info for #{aton}"
@@ -172,4 +209,10 @@ def get_info(aton)
 			return nil
 	end
 	return res
+end
+
+if check_fast_table ==true
+	$err_logger.debug "Fast tables test passed"
+else
+	$err_logger.error "Fast table doesnt have full info"
 end

@@ -2,10 +2,9 @@ require 'logger'
 
 $get_dir=File.expand_path(File.dirname(__FILE__))
 $err_logger=Logger.new("#{$get_dir}/var/log/get.log")
-$err_logger.level=Logger::DEBUG
+$err_logger.level=Logger::WARN
 
 require "#{$get_dir}/functions.lib.rb"
-
 
 if ARGV[1]
     case ARGV[1]
