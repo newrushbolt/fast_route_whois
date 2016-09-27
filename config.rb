@@ -7,7 +7,7 @@ require 'json'
 
 $app_dir='/home/mihailov.s/fast_route_whois'
 $log_dir='var/log'
-$log_level=Logger::WARN
+$log_level=Logger::INFO
 
 $whois_db='fast_whois'
 $whois_db_host='localhost'

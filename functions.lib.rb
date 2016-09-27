@@ -146,7 +146,7 @@ def get_fast_whois_info(aton)
     $err_logger.debug "Started <get_fast_whois_info> for #{aton}"
     info_result = {}
     req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_fast_inetnums_table}
-where (inet_aton(\"#{aton}\") & netmask) = network;"
+where (inet_aton(\"#{aton}\") & netmask) = network and network !=0 and netmask != 0;"
 	$err_logger.debug req
 	res=$whois_db_client.query(req)
 	$err_logger.debug "Got SQl results:"
