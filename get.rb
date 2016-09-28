@@ -2,12 +2,12 @@ require 'logger'
 
 $get_dir=File.expand_path(File.dirname(__FILE__))
 $err_logger=Logger.new("#{$get_dir}/var/log/get.log")
-$err_logger.level=Logger::WARN
+$err_logger.level=Logger::DEBUG
 
-require "#{$get_dir}/functions.lib.rb"
+require "#{$get_dir}/lib/whois.lib.rb"
 
-if ARGV[1]
-    case ARGV[1]
+if ARGV[2]
+    case ARGV[2]
     when 'debug'
 	$err_logger.level=Logger::DEBUG
     when 'info'
@@ -21,8 +21,28 @@ if ARGV[1]
     end
 end
 
+fast_whois=Fast_whois.new
+slow_whois=Slow_whois.new
+mode=nil
+
+if ! ARGV[2]
+	mode="fast"
+else
+	mode=ARGV[2]
+end
+
+
+
 if ARGV[0]
-	puts get_info(ARGV[0]).to_s
+	case mode
+	when "fast"
+		res=fast_whois.get_ip_route(ARGV[0])
+	when "slow"
+		res=slow_whois.get_ip_route(ARGV[0])
+	end
+	
+	puts res
+	puts res.class
 else
 	puts 'Need an IP'
 end

@@ -1,12 +1,6 @@
 #SQLite database
 *.sqlite
 *.sqlite3
-data/*
-data\*
-
-#Log files
-log/*
-log\*
 
 #Some soft backups
 *.bak
@@ -14,7 +8,6 @@ log\*
 #New logs, lock, etc
 var/*
 var\*
-
 
 # Windows image file caches
 Thumbs.db

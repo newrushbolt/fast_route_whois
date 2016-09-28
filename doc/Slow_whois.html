@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Slow_whois - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Common_whois.html">Common_whois</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-get_asn_geo">#get_asn_geo</a>
+    
+    <li ><a href="#method-i-get_info">#get_info</a>
+    
+    <li ><a href="#method-i-get_ip_route">#get_ip_route</a>
+    
+    <li ><a href="#method-i-get_lacnic_route">#get_lacnic_route</a>
+    
+    <li ><a href="#method-i-inetnum2db">#inetnum2db</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Slow_whois">
+  <h1 id="class-Slow_whois" class="class">
+    class Slow_whois
+  </h1>
+
+  <section class="description">
+    
+<p>Slow whois route lookup, using online-whois and GeoIPASNum</p>
+
+<p>Will update info to fast_inetnums</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Init Superclass init by calling anything from it and load WHOIS and GeoIP
+objects</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Common_whois.html#method-c-new">Common_whois.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+        <span class="ruby-keyword">super</span>.<span class="ruby-identifier">inspect</span>
+        <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;geoip&#39;</span>
+        <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;whois&#39;</span>
+        <span class="ruby-ivar">@whois_client</span> = <span class="ruby-constant">Whois</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-ivar">@geo_client</span>=<span class="ruby-constant">GeoIP</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{$lib_dir}/../var/geoip/GeoIPASNum.dat&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-get_ip_route" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_ip_route</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a <em>Hash</em> with ip route information or <em>nil</em></p>
+
+<h4 id="method-i-get_ip_route-label-Examples">Examples<span><a href="#method-i-get_ip_route-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<pre>&gt;get_ip_route(8.8.8.8)
+{&quot;network&quot;=&gt;&quot;8.8.8.0&quot;, &quot;netmask&quot;=&gt;&quot;255.255.255.0&quot;, &quot;asn&quot;=&gt;15169}
+Hash
+
+&gt;get_ip_route(10.11.23.1)
+
+NilClass</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="get_ip_route-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 294</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_ip_route</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_correct</span>(<span class="ruby-identifier">ip</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+                        <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+                <span class="ruby-keyword">end</span>                  
+                <span class="ruby-identifier">res</span>=<span class="ruby-identifier">get_info</span>(<span class="ruby-identifier">ip</span>)
+                <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">res</span>
+                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Cannot get slow_whois for #{ip}&quot;</span>
+                <span class="ruby-keyword">else</span>
+                        <span class="ruby-identifier">inetnum2db</span>(<span class="ruby-identifier">res</span>)
+                <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e_main</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Error while geting whois info for #{ip}&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e_main</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-inetnum2db" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inetnum2db</span><span
+            class="method-args">(inetnum)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Inserts an route info into DB</p>
+
+<h4 id="method-i-inetnum2db-label-Examples">Examples<span><a href="#method-i-inetnum2db-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<pre>&gt;inetnum2db({&quot;network&quot;=&gt;&quot;8.8.8.0&quot;, &quot;netmask&quot;=&gt;&quot;255.255.255.0&quot;, &quot;asn&quot;=&gt;15169})</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="inetnum2db-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inetnum2db</span>(<span class="ruby-identifier">inetnum</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Inserting update fo DB:\n#{inetnum}&quot;</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-identifier">req</span>=<span class="ruby-node">&quot;insert ignore into #{$whois_db_inetnums_table} values (inet_aton(\&quot;#{inetnum[&quot;network&quot;]}\&quot;),inet_aton(\&quot;#{inetnum[&quot;netmask&quot;]}\&quot;),#{inetnum[&quot;asn&quot;]});&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">req</span>
+                <span class="ruby-identifier">res</span>=<span class="ruby-ivar">@whois_db_client</span>.<span class="ruby-identifier">query</span>(<span class="ruby-identifier">req</span>)
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Error while updating fast_whois info for #{inetnum.to_s}&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-get_asn_geo" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_asn_geo</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_asn_geo-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_asn_geo</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Got no ASN for #{ip}, trying geoip base&quot;</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-identifier">geo_info</span>=<span class="ruby-ivar">@geo_client</span>.<span class="ruby-identifier">asn</span>(<span class="ruby-identifier">ip</span>)
+                <span class="ruby-identifier">asn</span>=<span class="ruby-identifier">geo_info</span>[<span class="ruby-value">:number</span>].<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^*(AS|as|As|aS)/</span>, <span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">to_i</span>
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Error in GeoIPASNum request for #{ip}&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Got asn: #{asn}&quot;</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">asn</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">asn</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_info" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_info</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_info-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 197</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_info</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Started &lt;get_whois_info&gt; for #{ip}&quot;</span>
+        <span class="ruby-identifier">info_result</span> = {}
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-identifier">whois_result</span>=<span class="ruby-ivar">@whois_client</span>.<span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">ip</span>).<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Error while geting whois info for #{ip}&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># $err_logger.debug &quot;Got whois response for #{ip} :&quot;</span>
+        <span class="ruby-comment"># $err_logger.debug whois_result</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">whois_result</span>
+                <span class="ruby-identifier">is_lacnic</span>=<span class="ruby-keyword">false</span>
+                <span class="ruby-identifier">whois_result</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">whois_result_line</span><span class="ruby-operator">|</span>
+                        <span class="ruby-keyword">begin</span>
+                                <span class="ruby-keyword">if</span> <span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;% Joint Whois - whois.lacnic.net&quot;</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;It&#39;s a LACNIC inetnum&quot;</span>
+                                        <span class="ruby-identifier">is_lacnic</span>=<span class="ruby-keyword">true</span>
+                                <span class="ruby-keyword">end</span>
+                                <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_lacnic</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;inetnum:&quot;</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Found LACNIC inetnum, parsing&quot;</span>
+                                        <span class="ruby-identifier">lacnic_route</span>=<span class="ruby-identifier">get_lacnic_route</span>(<span class="ruby-identifier">whois_result_line</span>)
+                                        <span class="ruby-identifier">ip_obj</span>=<span class="ruby-constant">IPAddr</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lacnic_route</span>,<span class="ruby-constant">Socket</span><span class="ruby-operator">::</span><span class="ruby-constant">AF_INET</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">inspect</span>
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">to_s</span>
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">inspect</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^\#.*\//</span>,<span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">delete</span>(<span class="ruby-string">&quot;&gt;&quot;</span>)
+                                <span class="ruby-keyword">end</span>
+                                <span class="ruby-keyword">if</span> <span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;origin&quot;</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Found Origin(ASN) line:&quot;</span>
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">whois_result_line</span>
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]=<span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^origin\:[w| ]*(AS|as|As|aS)/</span>, <span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">to_i</span>
+                                <span class="ruby-keyword">end</span>
+                                <span class="ruby-keyword">if</span> <span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;CIDR&quot;</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Found CIDR(route) line:&quot;</span>
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">whois_result_line</span>
+                                        <span class="ruby-identifier">ip_obj</span>=<span class="ruby-constant">IPAddr</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^CIDR\:[w| ]*/</span>, <span class="ruby-string">&quot;&quot;</span>))
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">to_s</span>
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">inspect</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^\#.*\//</span>,<span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">delete</span>(<span class="ruby-string">&quot;&gt;&quot;</span>)
+                                <span class="ruby-keyword">end</span>
+                                <span class="ruby-keyword">if</span> <span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">&quot;route&quot;</span>)
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Found route line:&quot;</span>
+                                        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">whois_result_line</span>
+                                        <span class="ruby-identifier">ip_obj</span>=<span class="ruby-constant">IPAddr</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">whois_result_line</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^route\:[w| ]*/</span>, <span class="ruby-string">&quot;&quot;</span>))
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">to_s</span>
+                                        <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>]=<span class="ruby-identifier">ip_obj</span>.<span class="ruby-identifier">inspect</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^\#.*\//</span>,<span class="ruby-string">&quot;&quot;</span>).<span class="ruby-identifier">delete</span>(<span class="ruby-string">&quot;&gt;&quot;</span>)
+                                <span class="ruby-keyword">end</span>
+                        <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Cannot parse whois line for #{ip} :&quot;</span>
+                                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">whois_result_line</span>
+                        <span class="ruby-keyword">end</span>
+                <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">to_s</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]
+                <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]=<span class="ruby-identifier">get_asn_geo</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Got full info for #{ip} :&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">else</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;Cannot get info for #{ip} :&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-identifier">info_result</span>=<span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">info_result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_lacnic_route" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_lacnic_route</span><span
+            class="method-args">(inetnum)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_lacnic_route-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_lacnic_route</span>(<span class="ruby-identifier">inetnum</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">inetnum</span>
+        <span class="ruby-identifier">ip_all</span>=<span class="ruby-identifier">inetnum</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){0,2}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/[0-9]{1,2}/</span>)[<span class="ruby-value">0</span>]
+        <span class="ruby-identifier">ip_part</span>=<span class="ruby-identifier">ip_all</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;/&quot;</span>)[<span class="ruby-value">0</span>]
+        <span class="ruby-identifier">net_part</span>=<span class="ruby-identifier">ip_all</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;/&quot;</span>)[<span class="ruby-value">1</span>]
+        <span class="ruby-identifier">net</span>=<span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">ip_part</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/</span>)
+                <span class="ruby-identifier">net</span>=<span class="ruby-node">&quot;#{ip_part}.0/#{net_part}&quot;</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">ip_part</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){1}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/</span>)
+                <span class="ruby-identifier">net</span>=<span class="ruby-node">&quot;#{ip_part}.0.0/#{net_part}&quot;</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">ip_part</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/</span>)
+                <span class="ruby-identifier">net</span>=<span class="ruby-node">&quot;#{ip_part}.0.0.0/#{net_part}&quot;</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Should be #{net}&quot;</span>  
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">net</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

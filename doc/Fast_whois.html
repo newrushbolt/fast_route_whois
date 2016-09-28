@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Fast_whois - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Common_whois.html">Common_whois</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-check_fast_table">#check_fast_table</a>
+    
+    <li ><a href="#method-i-get_info">#get_info</a>
+    
+    <li ><a href="#method-i-get_ip_route">#get_ip_route</a>
+    
+    <li ><a href="#method-i-load_slow2fast">#load_slow2fast</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Fast_whois">
+  <h1 id="class-Fast_whois" class="class">
+    class Fast_whois
+  </h1>
+
+  <section class="description">
+    
+<p>Fast whois route lookup, using MySQL fast_inetnums(MEMORY) table</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-check_fast_table" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_fast_table</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Check if fast tables got same info as slow</p>
+          
+          
+
+          
+          <div class="method-source-code" id="check_fast_table-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_fast_table</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Checking fast table content&quot;</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-identifier">req</span>=<span class="ruby-node">&quot;select (select count(*) as fcnt from #{$whois_db_fast_inetnums_table}) = (select count(*) as cnt from #{$whois_db_inetnums_table}) as fast_table_ok;&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">req</span>
+                <span class="ruby-identifier">res</span>=<span class="ruby-identifier">$whois_db_client</span>.<span class="ruby-identifier">query</span>(<span class="ruby-identifier">req</span>)
+        <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-string">&quot;Error comparing inetnums tables&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">req</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-keyword">end</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;fast_table_ok&quot;</span>] <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Fast_inetnums(MEMORY) got same route count as inetnums(INNODB)&quot;</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">else</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Fast_inetnums(MEMORY) havent got enought routes
+                #, updating from inetnums(INNODB)&quot;</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_ip_route" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_ip_route</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a <em>Hash</em> with ip route information or <em>nil</em></p>
+
+<h4 id="method-i-get_ip_route-label-Examples">Examples<span><a href="#method-i-get_ip_route-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<pre>&gt;get_ip_route(8.8.8.8)
+{&quot;network&quot;=&gt;&quot;8.8.8.0&quot;, &quot;netmask&quot;=&gt;&quot;255.255.255.0&quot;, &quot;asn&quot;=&gt;15169}
+Hash
+
+&gt;get_ip_route(10.11.23.1)
+
+NilClass</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="get_ip_route-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_ip_route</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_correct</span>(<span class="ruby-identifier">ip</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">res</span>=<span class="ruby-identifier">get_info</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">res</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Cannot get whois for #{ip}&quot;</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-load_slow2fast" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_slow2fast</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load all route from slow table to fast table(needed only after MySQL
+restart)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load_slow2fast-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_slow2fast</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-identifier">req</span>=<span class="ruby-node">&quot;insert ignore into #{$whois_db_fast_inetnums_table} (select * from #{$whois_db_inetnums_table});&quot;</span>
+                <span class="ruby-identifier">res</span>=<span class="ruby-identifier">$whois_db_client</span>.<span class="ruby-identifier">query</span>(<span class="ruby-identifier">req</span>)
+        <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-string">&quot;Error while updating fast_inetnums table&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">req</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-get_info" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_info</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_info-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_info</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Started &lt;@get_fast_whois_info&gt; for #{ip}&quot;</span>
+        <span class="ruby-identifier">info_result</span> = {}
+        <span class="ruby-identifier">req</span>=<span class="ruby-node">&quot;select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_inetnums_table}
+where (inet_aton(\&quot;#{ip}\&quot;) &amp; netmask) = network and network !=0 and netmask != 0;&quot;</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">req</span>
+        <span class="ruby-identifier">res</span>=<span class="ruby-ivar">@whois_db_client</span>.<span class="ruby-identifier">query</span>(<span class="ruby-identifier">req</span>)
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Got SQl results:&quot;</span>
+        <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">each</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">res</span>.<span class="ruby-identifier">any?</span>
+                <span class="ruby-identifier">result</span>=<span class="ruby-identifier">res</span>.<span class="ruby-identifier">first</span>
+                <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>]=<span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;network&quot;</span>]
+                <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>]=<span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;netmask&quot;</span>]
+                <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]=<span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;asn&quot;</span>]
+        <span class="ruby-keyword">end</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;network&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;netmask&quot;</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info_result</span>[<span class="ruby-string">&quot;asn&quot;</span>]
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Got full info for #{ip} :&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">else</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Cannot get info for #{ip} :&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-identifier">info_result</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-identifier">info_result</span>=<span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">info_result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Common_whois - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-is_correct">#is_correct</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Common_whois">
+  <h1 id="class-Common_whois" class="class">
+    class Common_whois
+  </h1>
+
+  <section class="description">
+    
+<p>Class with common whois functions</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Initialize Mysql2 instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-ivar">@whois_db_client</span> = <span class="ruby-constant">Mysql2</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:host</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$whois_db_host</span>, <span class="ruby-value">:database</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$whois_db</span>, <span class="ruby-value">:username</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$whois_db_user</span>, <span class="ruby-value">:password</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$whois_db_pass</span>)
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e_cor</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">fatal</span> <span class="ruby-node">&quot;Cannot connect to DB:\n :host =&gt; #{$whois_db_host}, :database =&gt; #{$whois_db}, :username =&gt; #{$whois_db_user}, :password =&gt; #{$whois_db_pass}&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">fatal</span> <span class="ruby-identifier">e_cor</span>.<span class="ruby-identifier">inspect</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-is_correct" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_correct</span><span
+            class="method-args">(ip)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="is_correct-source">
+            <pre><span class="ruby-comment"># File lib/whois.lib.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_correct</span>(<span class="ruby-identifier">ip</span>)
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-constant">IPAddr</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ip</span>)
+                <span class="ruby-identifier">$private_ip_nets</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">net</span><span class="ruby-operator">|</span>
+                        <span class="ruby-keyword">if</span> <span class="ruby-identifier">net</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ip</span>)
+                                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;IP #{ip} is in private net #{net.inspect}, exiting&quot;</span>
+                                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+                        <span class="ruby-keyword">end</span>
+                <span class="ruby-keyword">end</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">rescue</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e_cor</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;#{ip} is not a correct IP&quot;</span>
+                <span class="ruby-identifier">$err_logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">e_cor</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
