@@ -6,8 +6,8 @@
 *.bak
 
 #New logs, lock, etc
-var/*
-var\*
+var/log/*
+var/run/*
 
 # Windows image file caches
 Thumbs.db

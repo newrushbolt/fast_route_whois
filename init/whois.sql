@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `fast_whois`;
+CREATE DATABASE IF NOT EXISTS fast_whois;
 USE `fast_whois`;
 
 DROP TABLE IF EXISTS `fast_inetnums`;
@@ -21,8 +21,7 @@ CREATE TABLE `inetnums` (
   KEY `full` (`network`,`netmask`,`asn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP USER IF EXISTS fast_whois;
-CREATE USER 'fast_whois' IDENTIFIED BY 'wb5nv6d8';
+CREATE USER 'fast_whois'@'localhost' IDENTIFIED BY 'wb5nv6d8';
 GRANT ALL ON `fast_whois`.* TO 'fast_whois';
 GRANT USAGE ON `fast_whois`.* TO fast_whois;
 
@@ -36,5 +35,4 @@ BEGIN
         delete from `fast_whois`.`fast_inetnums` where network = OLD.network and netmask = OLD.netmask;
 END;;
 DELIMITER ;
-
 

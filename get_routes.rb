@@ -1,6 +1,9 @@
 $my_dir=File.expand_path(File.dirname(__FILE__))
 require 'logger'
-require "#{$my_dir}/config.rb"
+require 'mysql2'
+require 'ipaddr'
+#require 'logger'
+require "#{$my_dir}/etc/common.conf.rb"
 
 $err_logger=Logger.new("#{$my_dir}/var/log/inetnums_update.log")
 $err_logger.level=$log_level
@@ -52,8 +55,8 @@ def parse_db(db_filename)
 	    if raw_object.start_with?("route:")
 			$err_logger.debug "Found route object"
 			begin
-				raw_ip=raw_object.match(/^route:.*$/).to_s.gsub(/^route:[\ \t]*/,"").delete(" ")
-				raw_asn=raw_object.match(/^origin:.*$/).to_s.gsub(/^origin:[\ \t]*(AS|as|As|aS)/,"").delete(" ").to_i
+				raw_ip=raw_object.match(/^route:.*$/).to_s.gsub(/^route:[\ \t\r]*/,"").delete(" ")
+				raw_asn=raw_object.match(/^origin:.*$/).to_s.gsub(/^origin:[\ \t\r]*(AS|as|As|aS)/,"").delete(" ").to_i
 			rescue => e
 				$err_logger.error 'error while converting object data'
 				$err_logger.error raw_object
