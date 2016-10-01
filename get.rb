@@ -25,10 +25,10 @@ fast_whois=Fast_whois.new
 slow_whois=Slow_whois.new
 mode=nil
 
-if ! ARGV[2]
+if ! ARGV[1]
 	mode="fast"
 else
-	mode=ARGV[2]
+	mode=ARGV[1]
 end
 
 
