@@ -2,7 +2,6 @@
 var/log/*
 var/run/*
 var/RIR/*
-data/*
 
 # Windows image file caches
 Thumbs.db
