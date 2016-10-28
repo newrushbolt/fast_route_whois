@@ -255,7 +255,9 @@ class Slow_whois < Common_whois
 					if whois_result_line.start_with?("CIDR")
 						$err_logger.debug "Found CIDR(route) line:"
 						$err_logger.debug whois_result_line
-						ip_obj=IPAddr.new(whois_result_line.gsub(/^CIDR\:[w| ]*/, ""))
+						ip_obj_a=whois_result_line.gsub(/^CIDR\:[w| ]*/, "").match(/^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}[, ]{0,3}){1,10}/)[0].delete(" ").split(",").sort
+						$err_logger.debug ip_obj_a
+						ip_obj=IPAddr.new(ip_obj_a[0])
 						info_result["network"]=ip_obj.to_s
 						info_result["netmask"]=ip_obj.inspect.gsub(/^\#.*\//,"").delete(">")
 					end
