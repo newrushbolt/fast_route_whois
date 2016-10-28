@@ -32,6 +32,8 @@ class Common_whois
 		end
 	end
 	
+	public
+	
 	def is_correct(ip)
 		begin
 			IPAddr.new(ip)
@@ -178,6 +180,16 @@ class Slow_whois < Common_whois
 		$err_logger.debug "Should be #{net}"	
 		return net
 	end
+	
+	def get_krnic_route(inetnum)
+		$err_logger.debug inetnum
+		ip_all=inetnum.match(/IPv4 Address[ ]*\:[ ]*[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}[ ]*\-[ ]*[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}[ ]*\(\/[0-9]{1,2}\)/)[0]
+		ip_part=ip_all.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)[0]
+		net_part=ip_all.match(/\/[0-9]{1,2}/)[0]
+		net="#{ip_part}#{net_part}"
+		$err_logger.debug "Should be #{net}"	
+		return net
+	end
 
 	def get_asn_geo(ip)
 		$err_logger.debug "Got no ASN for #{ip}, trying geoip base"
@@ -204,20 +216,33 @@ class Slow_whois < Common_whois
 			$err_logger.error e.to_s
 			return nil
 		end
-		# $err_logger.debug "Got whois response for #{ip} :"
-		# $err_logger.debug whois_result
+		$err_logger.debug "Got whois response for #{ip} :"
+		$err_logger.debug whois_result
 		if whois_result
 			is_lacnic=false
+			is_krnic=false
 			whois_result.split("\n").each do |whois_result_line|
 				begin
 					if whois_result_line.start_with?("% Joint Whois - whois.lacnic.net")
 						$err_logger.debug "It's a LACNIC inetnum"
 						is_lacnic=true
 					end
+					if whois_result_line.start_with?("KRNIC is not an ISP but a National Internet Registry similar to APNIC.")
+						$err_logger.debug "It's a KRNIC inetnum"
+						is_krnic=true
+					end
 					if is_lacnic and whois_result_line.start_with?("inetnum:")
 						$err_logger.debug "Found LACNIC inetnum, parsing"
 						lacnic_route=get_lacnic_route(whois_result_line)
 						ip_obj=IPAddr.new(lacnic_route,Socket::AF_INET)
+						$err_logger.debug ip_obj.inspect
+						info_result["network"]=ip_obj.to_s
+						info_result["netmask"]=ip_obj.inspect.gsub(/^\#.*\//,"").delete(">")
+					end
+					if is_krnic and whois_result_line.start_with?("IPv4 Address")
+						$err_logger.debug "Found KRNIC inetnum, parsing"
+						krnic_route=get_krnic_route(whois_result_line)
+						ip_obj=IPAddr.new(krnic_route,Socket::AF_INET)
 						$err_logger.debug ip_obj.inspect
 						info_result["network"]=ip_obj.to_s
 						info_result["netmask"]=ip_obj.inspect.gsub(/^\#.*\//,"").delete(">")

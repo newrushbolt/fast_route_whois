@@ -1,6 +1,4 @@
 
-
-
 $log_level=Logger::INFO
 
 $whois_db='fast_whois'
