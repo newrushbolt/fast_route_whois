@@ -205,7 +205,27 @@ class Slow_whois < Common_whois
 		$err_logger.debug asn
 		return asn
 	end
-
+	
+	def inetnum2cidr(inetnum_raw)
+		$err_logger.debug "Parsing inetnum \"#{inetnum_raw}\" to CIDR"
+		begin
+			inetnum=inetnum_raw.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\-[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)[0]
+			first_ip=inetnum.split("-")[0]
+			last_ip=inetnum.split("-")[1]
+			netmask=[]
+			for num in (0..3)
+				first=first_ip.split(".")[num].to_i
+				last=last_ip.split(".")[num].to_i
+				octet=255-(last - first)
+				netmask.push(octet)
+			end
+		rescue => e 
+			$err_logger.warn "Cannot parse inetnum \"#{inetnum_raw}\" to CIDR"
+		end
+		$err_logger.debug "Parsed inetnum \"#{inetnum_raw}\" to CIDR #{inetnum.split("-")[0]}/#{netmask.join(".")}"
+		return "#{inetnum.split("-")[0]}/#{netmask.join(".")}"
+	end
+	
 	def get_info(ip)
 		$err_logger.debug "Started <get_whois_info> for #{ip}"
 		info_result = {}
@@ -238,6 +258,13 @@ class Slow_whois < Common_whois
 						$err_logger.debug ip_obj.inspect
 						info_result["network"]=ip_obj.to_s
 						info_result["netmask"]=ip_obj.inspect.gsub(/^\#.*\//,"").delete(">")
+					elsif whois_result_line.start_with?("inetnum:")
+						$err_logger.debug "Found backup inetnum, parsing"
+						backup_inetnum=inetnum2cidr(whois_result_line.delete(" "))
+						ip_obj=IPAddr.new(backup_inetnum,Socket::AF_INET)
+						$err_logger.debug ip_obj.inspect
+						info_result["backup_network"]=ip_obj.to_s
+						info_result["backup_netmask"]=ip_obj.inspect.gsub(/^\#.*\//,"").delete(">")
 					end
 					if is_krnic and whois_result_line.start_with?("IPv4 Address")
 						$err_logger.debug "Found KRNIC inetnum, parsing"
@@ -275,6 +302,16 @@ class Slow_whois < Common_whois
 			end
 		end
 		$err_logger.debug info_result.to_s
+		
+		if ! info_result["network"] and ! info_result["netmask"] and info_result["backup_network"] and info_result["backup_netmask"]
+			info_result["network"] = info_result["backup_network"]
+			info_result["netmask"] = info_result["backup_netmask"]
+		end
+
+		if info_result["backup_network"] and info_result["backup_netmask"]
+			info_result.delete("backup_netmask")
+			info_result.delete("backup_network")
+		end
 		
 		if info_result["network"] and info_result["netmask"] and ! info_result["asn"]
 			info_result["asn"]=get_asn_geo(ip)

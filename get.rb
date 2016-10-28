@@ -26,7 +26,7 @@ slow_whois=Slow_whois.new
 mode=nil
 
 if ! ARGV[1]
-	mode="fast"
+	mode="slow"
 else
 	mode=ARGV[1]
 end
