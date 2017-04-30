@@ -60,7 +60,7 @@ class Fast_whois < Common_whois
 	def get_info(ip)
 		$err_logger.debug "Started <@get_fast_whois_info> for #{ip}"
 		info_result = {}
-		req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_inetnums_table}
+		req="select inet_ntoa(network) as network, inet_ntoa(netmask) as netmask,asn from #{$whois_db_fast_inetnums_table}
 	where (inet_aton(\"#{ip}\") & netmask) = network and network !=0 and netmask != 0;"
 		$err_logger.debug req
 		res=@whois_db_client.query(req)
@@ -112,7 +112,7 @@ class Fast_whois < Common_whois
 	def check_fast_table
 		$err_logger.debug "Checking fast table content"
 		begin
-			req="select (select count(*) as fcnt from #{$whois_db_fast_inetnums_table}) = (select count(*) as cnt from #{$whois_db_inetnums_table}) as fast_table_ok;"
+			req="select (select count(*) as fcnt from #{$whois_db_fast_inetnums_table}) = (select count(*) as cnt from #{$whois_db_fast_inetnums_table}) as fast_table_ok;"
 			$err_logger.debug req
 			res=$whois_db_client.query(req)
 		rescue => e
@@ -135,7 +135,7 @@ class Fast_whois < Common_whois
 #Load all route from slow table to fast table(needed only after MySQL restart)
 	def load_slow2fast
 		begin
-			req="insert ignore into #{$whois_db_fast_inetnums_table} (select * from #{$whois_db_inetnums_table});"
+			req="insert ignore into #{$whois_db_fast_inetnums_table} (select * from #{$whois_db_fast_inetnums_table});"
 			res=$whois_db_client.query(req)
 		rescue => e
 			$err_logger.error "Error while updating fast_inetnums table"
@@ -146,7 +146,7 @@ class Fast_whois < Common_whois
 	end
 	
 end
-	
+
 
 #Slow whois route lookup, using online-whois and GeoIPASNum
 #

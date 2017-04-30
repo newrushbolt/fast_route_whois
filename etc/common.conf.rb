@@ -2,7 +2,7 @@
 $log_level=Logger::INFO
 
 $whois_db='fast_whois'
-$whois_db_host='localhost'
+$whois_db_host='127.0.0.1'
 $whois_db_user='fast_whois'
 $whois_db_pass='wb5nv6d8'
 $whois_db_inetnums_table='inetnums'
