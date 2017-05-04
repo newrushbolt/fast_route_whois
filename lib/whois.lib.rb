@@ -320,13 +320,13 @@ class Slow_whois < Common_whois
 			$err_logger.debug "Got full info for #{ip} :"
 			$err_logger.debug info_result.to_s
 		else
-			$err_logger.error "Cannot get info for #{ip} :"
+			$err_logger.error "Cannot get info for #{ip}, inserting null record :"
 			$err_logger.error info_result.to_s
-			info_result=nil
+			info_result={:network => "0.0.0.0",:asn => 0, :netmask="0.0.0.0"}
 		end
 		return info_result
 	end
-	
+
 	public
 #Inserts an route info into DB
 #==== Examples
