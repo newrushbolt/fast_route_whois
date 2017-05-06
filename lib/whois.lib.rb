@@ -232,9 +232,10 @@ class Slow_whois < Common_whois
 		begin
 			whois_result=@whois_client.lookup(ip).to_s
 		rescue  => e
-			$err_logger.error "Error while geting whois info for #{ip}"
+			$err_logger.error "Error while geting whois info for #{ip}, inserting null"
 			$err_logger.error e.to_s
-			return nil
+			info_result={ :network => "0.0.0.0", :asn => 0, :netmask => "0.0.0.0" }
+			return info_result
 		end
 		$err_logger.debug "Got whois response for #{ip} :"
 		$err_logger.debug whois_result
@@ -322,7 +323,7 @@ class Slow_whois < Common_whois
 		else
 			$err_logger.error "Cannot get info for #{ip}, inserting null record :"
 			$err_logger.error info_result.to_s
-			info_result={ :network => "0.0.0.0",:asn => 0, :netmask => "0.0.0.0" }
+			info_result={ :network => "0.0.0.0", :asn => 0, :netmask => "0.0.0.0" }
 		end
 		return info_result
 	end

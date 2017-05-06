@@ -21,9 +21,10 @@ CREATE TABLE `inetnums` (
   KEY `full` (`network`,`netmask`,`asn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+GRANT USAGE ON `fast_whois`.* TO 'fast_whois'@'localhost';
+DROP USER 'fast_whois'@'localhost';
 CREATE USER 'fast_whois'@'localhost' IDENTIFIED BY 'wb5nv6d8';
-GRANT ALL ON `fast_whois`.* TO 'fast_whois';
-GRANT USAGE ON `fast_whois`.* TO fast_whois;
+GRANT ALL ON `fast_whois`.* TO 'fast_whois'@'localhost';
 
 DELIMITER ;;
 CREATE DEFINER=`fast_whois`@`localhost` TRIGGER `fast_whois`.`inetnums_AFTER_INSERT` AFTER INSERT ON `inetnums` FOR EACH ROW
