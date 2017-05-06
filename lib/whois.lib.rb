@@ -322,7 +322,7 @@ class Slow_whois < Common_whois
 		else
 			$err_logger.error "Cannot get info for #{ip}, inserting null record :"
 			$err_logger.error info_result.to_s
-			info_result={:network => "0.0.0.0",:asn => 0, :netmask="0.0.0.0"}
+			info_result={ :network => "0.0.0.0",:asn => 0, :netmask => "0.0.0.0" }
 		end
 		return info_result
 	end
