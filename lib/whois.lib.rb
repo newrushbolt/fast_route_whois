@@ -195,11 +195,12 @@ class Slow_whois < Common_whois
 		$err_logger.debug "Got no ASN for #{ip}, trying geoip base"
 		begin
 			geo_info=@geo_client.asn(ip)
+			$err_logger.debug "Got info: #{geo_info}"
 			asn=geo_info[:number].gsub(/^*(AS|as|As|aS)/, "").to_i
 		rescue  => e
 			$err_logger.error "Error in GeoIPASNum request for #{ip}"
 			$err_logger.error e.to_s
-			return nil
+			return 0
 		end
 		$err_logger.debug "Got asn: #{asn}"
 		$err_logger.debug asn
@@ -234,7 +235,9 @@ class Slow_whois < Common_whois
 		rescue  => e
 			$err_logger.error "Error while geting whois info for #{ip}, inserting null"
 			$err_logger.error e.to_s
-			info_result={ :network => "0.0.0.0", :asn => 0, :netmask => "0.0.0.0" }
+			info_result["network"] = "0.0.0.0"
+			info_result["asn"] = 0
+			info_result["netmask"] = "0.0.0.0"
 			return info_result
 		end
 		$err_logger.debug "Got whois response for #{ip} :"
