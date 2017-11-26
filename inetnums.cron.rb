@@ -83,6 +83,7 @@ def parse_db(db_filename)
 				$err_logger.error "Cannot cast an IP net:"
 				$err_logger.error e.to_s
 				$err_logger.error raw_ip.inspect
+				next
 			end
 			$err_logger.debug "Found ASN: #{raw_asn}"
 			$err_logger.debug "Found IP: #{raw_ip}"
