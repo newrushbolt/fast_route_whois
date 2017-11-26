@@ -22,7 +22,7 @@ end
 
 require "#{$my_dir}/functions.lib.rb"
 
-$whois_db_client=PG::Connection.new(:host => $whois_db_host, :dbname => $whois_db, :user => $whois_db_user, :password => $whois_db_pass)
+$whois_db_client=PG::Connection.new(:host => $whois_db_host, :port => $whois_db_port, :dbname => $whois_db, :user => $whois_db_user, :password => $whois_db_pass)
 $inetnums=[]
 i_geocity_client
 
