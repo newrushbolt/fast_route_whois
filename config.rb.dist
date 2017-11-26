@@ -10,6 +10,7 @@ $log_dir='var/log'
 $log_level=Logger::INFO
 
 $whois_db='p2p'
+$whois_db_port='2010'
 $whois_db_host='127.0.0.1'
 $whois_db_user='p2p'
 $whois_db_pass='p2p'
