@@ -1,27 +1,41 @@
 $my_dir=File.expand_path(File.dirname(__FILE__))
+
 require 'logger'
 require "#{$my_dir}/config.rb"
 
-$err_logger=Logger.new("#{$my_dir}/var/log/inetnums_update.log")
+$err_logger=Logger.new("#{$my_dir}/inetnums_update.log")
 $err_logger.level=$log_level
-
 if ARGV[1]
     case ARGV[1]
     when 'debug'
-	$err_logger.level=Logger::DEBUG
+		$err_logger.level=Logger::DEBUG
     when 'info'
-	$err_logger.level=Logger::IFNO
+		$err_logger.level=Logger::IFNO
     when 'warn'
-	$err_logger.level=Logger::WARN
+		$err_logger.level=Logger::WARN
     when 'error'
-	$err_logger.level=Logger::ERROR
+		$err_logger.level=Logger::ERROR
     when 'fatal'
-	$err_logger.level=Logger::FATAL
+		$err_logger.level=Logger::FATAL
     end
 end
 
-$whois_db_client=Mysql2::Client.new(:host => $whois_db_host, :database => $whois_db, :username => $whois_db_user, :password => $whois_db_pass)
+require "#{$my_dir}/functions.lib.rb"
+
+$whois_db_client=PG::Connection.new(:host => $whois_db_host, :dbname => $whois_db, :user => $whois_db_user, :password => $whois_db_pass)
 $inetnums=[]
+i_geocity_client
+
+class IPAddr
+  def cidr_mask
+    case (@family)
+    when Socket::AF_INET
+      32 - Math.log2((1<<32) - @mask_addr).to_i
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+  end
+end
 
 def get_db(url,rr_name,db_filename)
 	if ! File.exists?(db_filename)
@@ -49,7 +63,7 @@ def parse_db(db_filename)
 		puts e.to_s
 	end
 	data_raw.split("\n\n").each do |raw_object|
-	    if raw_object.start_with?("route:")
+		if raw_object.start_with?("route:")
 			$err_logger.debug "Found route object"
 			begin
 				raw_ip=raw_object.match(/^route:.*$/).to_s.gsub(/^route:[\ \t]*/,"").delete(" ")
@@ -62,6 +76,7 @@ def parse_db(db_filename)
 				raw_asn=nil
 			end
 			line={}
+			ip=nil
 			begin
 				ip=IPAddr.new(raw_ip)
 			rescue => e
@@ -72,9 +87,11 @@ def parse_db(db_filename)
 			$err_logger.debug "Found ASN: #{raw_asn}"
 			$err_logger.debug "Found IP: #{raw_ip}"
 			line["asn"]=raw_asn.to_i
-			line["netmask"]=ip.inspect.gsub(/^\#.*\//,"").delete(">")
-			line["network"]=ip.to_s
-			if line["asn"] and line["network"] and line["netmask"]
+			line_ip=ip.to_s
+			line_mask=ip.cidr_mask
+			line["network"]="#{line_ip}/#{line_mask}"
+			line.merge!(get_geo_info(line_ip))
+			if line["asn"] and line["network"]
 				$err_logger.debug "Got full info, adding:"
 				$err_logger.debug line.inspect
 				inetnums.push(line)
@@ -105,15 +122,15 @@ $rr_urls.each do |rr_url|
 end
 
 $err_logger.info "Finished with all the DB's, got #{$inetnums.length} route enties, inserting to SQL"
-
+$whois_db_client.prepare('add_network_data', "insert into #{$whois_db_inetnums_table} (network,asn,country,region,city) values ($4,$1,$3,$5,$2) ON CONFLICT DO NOTHING;")
 $inetnums.each do |inetnum|
 	begin
-		req="insert ignore into #{$whois_db_inetnums_table} values (inet_aton(\"#{inetnum["network"]}\"),inet_aton(\"#{inetnum["netmask"]}\"),#{inetnum["asn"]});"
-		res=$whois_db_client.query(req)
+		data_set=inetnum.sort.to_h.values
+		res=$whois_db_client.exec_prepared('add_network_data',data_set)
 	rescue => e
 		$err_logger.error e.to_s
-		$err_logger.error req
+		$err_logger.error data_set
 	end
 end
 
-$err_logger.debug "SQL insert finished"
+$err_logger.info "SQL insert finished"

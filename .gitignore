@@ -1,12 +1,5 @@
-#SQLite database
-*.sqlite
-*.sqlite3
-data/*
-data\*
 
-#Log files
-log/*
-log\*
+*.log
 
 #Some soft backups
 *.bak

@@ -1,6 +1,6 @@
 require 'etc'
 require 'geoip'
-require 'mysql2'
+require 'pg'
 require 'rubygems'
 require 'whois'
 require 'json'
@@ -9,12 +9,11 @@ $app_dir='/home/mihailov.s/fast_route_whois'
 $log_dir='var/log'
 $log_level=Logger::INFO
 
-$whois_db='fast_whois'
-$whois_db_host='localhost'
-$whois_db_user='fast_whois'
-$whois_db_pass='wb5nv6d8'
-$whois_db_inetnums_table='inetnums'
-$whois_db_fast_inetnums_table='fast_inetnums'
+$whois_db='p2p'
+$whois_db_host='127.0.0.1'
+$whois_db_user='p2p'
+$whois_db_pass='p2p'
+$whois_db_inetnums_table='networks'
 
 $rr_urls=['ftp://ftp.apnic.net/public/apnic/whois/apnic.db.route.gz',
 'ftp://ftp.arin.net/pub/rr/arin.db',
